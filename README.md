@@ -54,8 +54,8 @@ musicwave/
 ├── index.html          # Arquivo principal da aplicação
 ├── README.md          # Documentação do projeto
 └── assets/            # (opcional) Pasta para recursos adicionais
-    ├── icons/         # Ícones personalizados
-    └── screenshots/   # Capturas de tela da aplicação
+└── style.css          # Estilo da aplicação
+└── script.js          #Iteração com a aplicação
 ```
 
 ## 🚀 Como Usar

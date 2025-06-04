@@ -1,1 +1,1 @@
-quero que quanto adiciono uma musica sejá possivel ver a capa da mesma, e ao clicar na musica sejá exibida uma aba com a capa da musica rodando e com todos os outros elementos de um player de musica, quero que seja possivel colocar novas musicas nas playlists ja existente e criar novos playlist e que a capa da playlist seja a ultima musica colocada, que a aba search seja exibida as musicas que eu coloquei no aplicativo, e que a secção library seja completamente iteragivel, que a aba para User possa ver as minhas informações e colocar a minha foto nela
+

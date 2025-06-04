@@ -141,6 +141,12 @@ A aplicação utiliza **localStorage** para persistir:
 - **Touch gestures**: Interface otimizada para toque
 - **Responsividade**: Layout adaptado automaticamente
 
+## Design
+
+![musicwave](https://github.com/user-attachments/assets/03820c3c-6b0e-453a-a5a5-86366f3cacd6)
+
+![musicwave_2](https://github.com/user-attachments/assets/e027b29d-9290-41c0-9146-ba5ec623c299)
+
 ## 🔮 Futuras Melhorias
 
 - [ ] Equalizer visual

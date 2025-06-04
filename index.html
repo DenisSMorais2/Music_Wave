@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern MP3 Player - Spotify Style</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="min-h-screen flex flex-col bg-black text-white">
+    <!-- Overlay for mobile sidebar -->
+    <div id="overlay" class="overlay"></div>
+    
+    <!-- Floating action button for mobile -->
+    <div id="fab" class="fab md:hidden">
+        <i class="fas fa-music text-white text-xl"></i>
+    </div>
+    
+    <div class="flex flex-1">
+        <!-- Sidebar -->
+        <div id="sidebar" class="sidebar w-64 bg-black p-6 flex flex-col">
+            <div class="flex items-center mb-10">
+                <i class="fas fa-headphones text-2xl text-green-500 mr-3"></i>
+                <h1 class="text-xl font-bold">MusicWave</h1>
+            </div>
+            
+            <nav class="mb-8">
+                <ul class="space-y-4">
+                    <li>
+                        <a href="#" class="nav-item flex items-center text-white hover:text-green-500 transition active" data-tab="home">
+                            <i class="fas fa-home mr-4 w-6 text-center"></i>
+                            <span>Home</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-item flex items-center text-gray-400 hover:text-green-500 transition" data-tab="search">
+                            <i class="fas fa-search mr-4 w-6 text-center"></i>
+                            <span>Search</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-item flex items-center text-gray-400 hover:text-green-500 transition" data-tab="library">
+                            <i class="fas fa-book mr-4 w-6 text-center"></i>
+                            <span>Your Library</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="mb-8">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-gray-400 uppercase text-xs font-bold tracking-wider">Playlists</h3>
+                    <button id="create-playlist-btn" class="text-gray-400 hover:text-white transition">
+                        <i class="fas fa-plus text-lg"></i>
+                    </button>
+                </div>
+                <ul id="playlist-list" class="space-y-3">
+                    <li>
+                        <a href="#" class="playlist-item text-gray-400 hover:text-white transition" data-playlist="liked">
+                            <i class="fas fa-heart text-purple-500 mr-2"></i>
+                            Liked Songs
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="mt-auto">
+                <div class="bg-gray-800 rounded p-3 mb-4">
+                    <p class="text-sm mb-2">Install App</p>
+                    <button class="bg-white text-black text-sm px-4 py-1 rounded-full font-medium hover:scale-105 transition">
+                        <i class="fas fa-download mr-2"></i> Install
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main content -->
+        <div class="flex-1 bg-gradient-to-b from-gray-900 to-black overflow-y-auto">
+            <header class="sticky top-0 bg-gray-900 bg-opacity-80 backdrop-blur-sm z-30 p-4 flex justify-between items-center">
+                <button id="menu-toggle" class="md:hidden text-white">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+                
+                <div class="hidden md:flex items-center space-x-4">
+                    <button class="bg-black bg-opacity-40 rounded-full p-1 text-gray-400 hover:text-white">
+                        <i class="fas fa-chevron-left text-xl"></i>
+                    </button>
+                    <button class="bg-black bg-opacity-40 rounded-full p-1 text-gray-400 hover:text-white">
+                        <i class="fas fa-chevron-right text-xl"></i>
+                    </button>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <button class="bg-white text-black px-6 py-1 rounded-full font-bold hover:scale-105 transition">
+                        Upgrade
+                    </button>
+                    <div class="relative">
+                        <div id="user-profile" class="flex items-center bg-black bg-opacity-70 rounded-full pl-2 pr-4 py-1 cursor-pointer hover:bg-opacity-100 transition">
+                            <div id="user-avatar" class="w-6 h-6 rounded-full bg-purple-500 mr-2 flex items-center justify-center overflow-hidden">
+                                <i class="fas fa-user text-xs text-white"></i>
+                            </div>
+                            <span id="user-name" class="text-sm font-medium">User</span>
+                            <i class="fas fa-chevron-down text-xs ml-2"></i>
+                        </div>
+                        <div id="user-dropdown" class="dropdown w-48 p-2">
+                            <a href="#" id="profile-btn" class="block px-3 py-2 text-sm hover:bg-gray-600 rounded">Profile</a>
+                            <a href="#" class="block px-3 py-2 text-sm hover:bg-gray-600 rounded">Settings</a>
+                            <hr class="my-2 border-gray-600">
+                            <a href="#" class="block px-3 py-2 text-sm hover:bg-gray-600 rounded">Log out</a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Home Tab -->
+            <main id="home-tab" class="tab-content active p-6">
+                <section class="mb-8">
+                    <h2 class="text-2xl font-bold mb-6">Good afternoon</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="bg-gray-800 bg-opacity-40 rounded flex items-center overflow-hidden hover:bg-gray-700 transition cursor-pointer" data-playlist="liked">
+                            <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+                                <i class="fas fa-heart text-white text-2xl"></i>
+                            </div>
+                            <div class="p-4">
+                                <h3 class="font-medium">Liked Songs</h3>
+                                <p class="text-sm text-gray-400" id="liked-count">0 songs</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <section class="mb-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold">Recently played</h2>
+                        <a href="#" class="text-sm text-gray-400 hover:underline">Show all</a>
+                    </div>
+                    
+                    <div class="relative">
+                        <div id="songs-container" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                            <!-- Songs will be added here dynamically -->
+                        </div>
+                    </div>
+                </section>
+            </main>
+
+            <!-- Search Tab -->
+            <main id="search-tab" class="tab-content p-6">
+                <section class="mb-8">
+                    <h2 class="text-3xl font-bold mb-6">Search</h2>
+                    <div class="relative max-w-md">
+                        <input 
+                            type="text" 
+                            id="search-input" 
+                            placeholder="What do you want to listen to?" 
+                            class="w-full px-4 py-3 pl-12 rounded-full text-white placeholder-gray-400 bg-gray-800 border border-gray-600 focus:outline-none focus:border-green-500"
+                        >
+                        <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    </div>
+                </section>
+
+                <!-- Search Results -->
+                <section id="search-results" class="mb-8">
+                    <h3 class="text-xl font-bold mb-4">Your Music</h3>
+                    <div id="search-results-container" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                        <!-- Search results will be populated here -->
+                    </div>
+                </section>
+            </main>
+
+            <!-- Library Tab -->
+            <main id="library-tab" class="tab-content p-6">
+                <section class="mb-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-3xl font-bold">Your Library</h2>
+                        <div class="flex space-x-2">
+                            <button id="upload-btn" class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded-full text-sm font-medium transition">
+                                <i class="fas fa-upload mr-2"></i>Upload Music
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="flex space-x-4 mb-6">
+                        <button class="filter-btn bg-green-500 px-4 py-2 rounded-full text-sm transition" data-filter="all">
+                            All
+                        </button>
+                        <button class="filter-btn bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded-full text-sm transition" data-filter="playlists">
+                            Playlists
+                        </button>
+                        <button class="filter-btn bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded-full text-sm transition" data-filter="songs">
+                            Songs
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Library Content -->
+                <section id="library-content">
+                    <!-- Content will be filtered and displayed here -->
+                </section>
+            </main>
+        </div>
+    </div>
+    
+    <!-- Player bar -->
+    <div class="fixed bottom-0 left-0 right-0 bg-gray-900 border-t border-gray-800 z-40">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between h-20">
+                <!-- Song info -->
+                <div class="flex items-center w-1/4 min-w-[200px]">
+                    <div id="current-album-art" class="w-14 h-14 bg-gray-700 rounded mr-3 flex-shrink-0 flex items-center justify-center cursor-pointer" onclick="openNowPlaying()">
+                        <i class="fas fa-music text-gray-400"></i>
+                        <img id="current-album-art-img" src="" alt="Album Art" class="w-full h-full object-cover rounded hidden">
+                    </div>
+                    <div>
+                        <div id="current-song-title" class="text-sm font-medium truncate max-w-[150px]">No song selected</div>
+                        <div id="current-song-artist" class="text-xs text-gray-400 truncate max-w-[150px]">Select a song to play</div>
+                    </div>
+                    <button id="like-btn" class="ml-3 text-gray-400 hover:text-green-500 transition">
+                        <i class="far fa-heart"></i>
+                    </button>
+                </div>
+                
+                <!-- Player controls -->
+                <div class="flex flex-col items-center w-2/4 max-w-[722px]">
+                    <div class="flex items-center space-x-6 mb-2">
+                        <button id="shuffle-btn" class="text-gray-400 hover:text-white text-lg transition">
+                            <i class="fas fa-random"></i>
+                        </button>
+                        <button id="prev-btn" class="text-gray-400 hover:text-white text-2xl transition">
+                            <i class="fas fa-step-backward"></i>
+                        </button>
+                        <button id="play-btn" class="bg-white text-black rounded-full w-8 h-8 flex items-center justify-center hover:scale-105 transition">
+                            <i class="fas fa-play text-sm"></i>
+                        </button>
+                        <button id="next-btn" class="text-gray-400 hover:text-white text-2xl transition">
+                            <i class="fas fa-step-forward"></i>
+                        </button>
+                        <button id="repeat-btn" class="text-gray-400 hover:text-white text-lg transition">
+                            <i class="fas fa-redo"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="w-full flex items-center space-x-3">
+                        <span id="current-time" class="text-xs text-gray-400">0:00</span>
+                        <div class="flex-1 relative">
+                            <input id="progress-bar" type="range" min="0" max="100" value="0" class="w-full">
+                        </div>
+                        <span id="duration" class="text-xs text-gray-400">0:00</span>
+                    </div>
+                </div>
+                
+                <!-- Volume and other controls -->
+                <div class="flex items-center justify-end w-1/4 min-w-[180px]">
+                    <button id="queue-btn" class="text-gray-400 hover:text-white mr-3 transition">
+                        <i class="fas fa-list-ul"></i>
+                    </button>
+                    <div class="flex items-center">
+                        <button id="volume-btn" class="text-gray-400 hover:text-white mr-2 transition">
+                            <i class="fas fa-volume-down"></i>
+                        </button>
+                        <input id="volume-control" type="range" min="0" max="100" value="70" class="w-20">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Now Playing Modal -->
+    <div id="now-playing-modal" class="modal">
+        <div class="bg-gradient-to-b from-gray-800 to-black w-full max-w-md mx-4 rounded-lg p-8 text-center">
+            <button id="close-now-playing" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+            
+            <div class="mb-8">
+                <div id="now-playing-art" class="album-cover bg-gradient-to-br from-purple-500 to-blue-500 mx-auto mb-4 flex items-center justify-center">
+                    <i class="fas fa-music text-white text-6xl"></i>
+                </div>
+                
+                <h2 id="now-playing-title" class="text-2xl font-bold mb-2">Song Title</h2>
+                <p id="now-playing-artist" class="text-gray-400 mb-6">Artist Name</p>
+                
+                <!-- Player Controls -->
+                <div class="flex justify-center items-center space-x-6 mb-6">
+                    <button id="np-shuffle" class="text-gray-400 hover:text-white text-xl">
+                        <i class="fas fa-random"></i>
+                    </button>
+                    <button id="np-prev" class="text-gray-400 hover:text-white text-2xl">
+                        <i class="fas fa-step-backward"></i>
+                    </button>
+                    <button id="np-play" class="bg-white text-black rounded-full w-16 h-16 flex items-center justify-center hover:scale-105 transition">
+                        <i class="fas fa-play text-lg"></i>
+                    </button>
+                    <button id="np-next" class="text-gray-400 hover:text-white text-2xl">
+                        <i class="fas fa-step-forward"></i>
+                    </button>
+                    <button id="np-repeat" class="text-gray-400 hover:text-white text-xl">
+                        <i class="fas fa-redo"></i>
+                    </button>
+                </div>
+                
+                <!-- Progress -->
+                <div class="flex items-center space-x-3 mb-4">
+                    <span id="np-current-time" class="text-xs text-gray-400">0:00</span>
+                    <div class="flex-1 relative">
+                        <input id="np-progress" type="range" min="0" max="100" value="0" class="w-full">
+                    </div>
+                    <span id="np-duration" class="text-xs text-gray-400">0:00</span>
+                </div>
+                
+                <!-- Actions -->
+                <div class="flex justify-center space-x-6">
+                    <button id="np-like" class="text-gray-400 hover:text-green-500">
+                        <i class="far fa-heart text-xl"></i>
+                    </button>
+                    <button id="np-add-playlist" class="text-gray-400 hover:text-white">
+                        <i class="fas fa-plus text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Create Playlist Modal -->
+    <div id="playlist-modal" class="modal">
+        <div class="bg-gray-800 rounded-lg p-6 w-96 max-w-[90vw]">
+            <h3 class="text-xl font-bold mb-4">Create Playlist</h3>
+            <input 
+                type="text" 
+                id="playlist-name-input" 
+                placeholder="My Playlist #1" 
+                class="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 mb-4 text-white focus:outline-none focus:border-green-500"
+            >
+            <div class="flex justify-end space-x-3">
+                <button id="cancel-playlist-btn" class="px-4 py-2 text-gray-400 hover:text-white transition">
+                    Cancel
+                </button>
+                <button id="create-playlist-confirm-btn" class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded text-white transition">
+                    Create
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add to Playlist Modal -->
+    <div id="add-to-playlist-modal" class="modal">
+        <div class="bg-gray-800 rounded-lg p-6 w-96 max-w-[90vw] max-h-[80vh] overflow-y-auto">
+            <h3 class="text-xl font-bold mb-4">Add to Playlist</h3>
+            <div id="playlist-selection" class="space-y-2 mb-4">
+                <!-- Playlists will be listed here -->
+            </div>
+            <div class="flex justify-end space-x-3">
+                <button id="cancel-add-playlist-btn" class="px-4 py-2 text-gray-400 hover:text-white transition">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Profile Modal -->
+    <div id="profile-modal" class="modal">
+        <div class="bg-gray-800 rounded-lg p-6 w-96 max-w-[90vw]">
+            <h3 class="text-xl font-bold mb-4">User Profile</h3>
+            
+            <div class="text-center mb-6">
+                <div class="relative inline-block">
+                    <div id="profile-avatar" class="w-24 h-24 rounded-full bg-purple-500 mx-auto mb-4 flex items-center justify-center overflow-hidden">
+                        <i class="fas fa-user text-3xl text-white"></i>
+                    </div>
+                    <button id="upload-avatar-btn" class="absolute bottom-0 right-0 bg-green-500 rounded-full w-8 h-8 flex items-center justify-center">
+                        <i class="fas fa-camera text-white text-sm"></i>
+                    </button>
+                </div>
+                
+                <input 
+                    type="text" 
+                    id="profile-name-input" 
+                    placeholder="Your Name" 
+                    class="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 mb-4 text-white text-center focus:outline-none focus:border-green-500"
+                    value="User"
+                >
+            </div>
+            
+            <div class="space-y-4 mb-6">
+                <div>
+                    <label class="block text-sm text-gray-400 mb-2">Songs uploaded</label>
+                    <p id="songs-count" class="text-lg font-medium">0</p>
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-400 mb-2">Playlists created</label>
+                    <p id="playlists-count" class="text-lg font-medium">0</p>
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-400 mb-2">Liked songs</label>
+                    <p id="liked-songs-count" class="text-lg font-medium">0</p>
+                </div>
+            </div>
+            
+            <div class="flex justify-end space-x-3">
+                <button id="cancel-profile-btn" class="px-4 py-2 text-gray-400 hover:text-white transition">
+                    Cancel
+                </button>
+                <button id="save-profile-btn" class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded text-white transition">
+                    Save
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Hidden file inputs -->
+    <input type="file" id="file-input" accept=".mp3,.wav,.m4a,.flac" multiple class="hidden">
+    <input type="file" id="avatar-input" accept="image/*" class="hidden">
+    
+    <!-- Audio element -->
+    <audio id="audio-player"></audio>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
